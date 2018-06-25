@@ -1,4 +1,10 @@
-**This is code repository for the paper: A. Zhitnikov, R. Mulayoff and T. Michaeli, ‚ÄúRevealing Common Statistical Behaviors
-in Heterogeneous Populations‚Äù. International Conf. on Machine Learning (ICML 2018)**
+**This is code repository for the paper: A. Zhitnikov, R. Mulayoff and T. Michaeli, ìRevealing Common Statistical Behaviors
+in Heterogeneous Populationsî. International Conf. on Machine Learning (ICML 2018)**
+
+* to install
+	* python setup.py install --record files.txt
+
+* to unistall
+	* cat files.txt | xargs rm -rf
 
 
