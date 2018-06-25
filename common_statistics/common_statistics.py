@@ -1,5 +1,6 @@
 import numpy as np
 import scipy
+import scipy.stats
 import copy
 import multiprocessing as mp
 from itertools import repeat
