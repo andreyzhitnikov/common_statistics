@@ -19,15 +19,17 @@ import math
 plt.ion()
 
 np.random.seed(seed=555)
+random.seed(555)
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dim', required=False, default=3, type=int,
                     help='dimension of the simulation')
-parser.add_argument('--overlap_eigenvalues', required=False, action="store_true",
+parser.add_argument('--overlap-eigenvalues', required=False, action="store_true",
                     help='if true the all eigenvalues are drawn from [0, b],\
                     else eigenvalue i drawn from interval [b*(i-1),b*i], for i=1,...')
 parser.add_argument('--vnum', required=False, default=1000, type=int, help='number of subjects')
 parser.add_argument('--visual', default=False, action="store_true", help='visual')
-parser.add_argument('--show_corrs', default=False, action="store_true", help='show correlations of the subjects')
+parser.add_argument('--show-corrs', default=False, action="store_true", help='show correlations of the subjects')
 parser.add_argument('--repeat-one', default=0, type=int, help='repeat constant one matrix ')
 parser.add_argument('--outliers', default=0, type=int, help='number of outliers')
 parser.add_argument('--b', default=1, type=int, help='first eignevalue is drawn in the interval [0, b]')
@@ -75,7 +77,7 @@ def _draw_subject_specific_and_estimate(cov_u, dim, vnum,
         for i in range(0, vnum-outliers_num):
             # ---construct covariance of subject#
             LambdaMatrix = _draw_eigenvalues(dim=args.dim, b=args.b, distribution="unif", overlap=args.overlap_eigenvalues)
-            rotMatrix = _draw_rotation_matrix(dim=3)
+            rotMatrix = _draw_rotation_matrix(args.dim)
             noise_cov = rotMatrix.dot(LambdaMatrix.dot(rotMatrix.transpose()))
             cov = np.add(cov_u, noise_cov)
             noise_covars.append(noise_cov)
@@ -86,7 +88,7 @@ def _draw_subject_specific_and_estimate(cov_u, dim, vnum,
         # --------------------------------------#
         print("snr is :" + str(snr(np.asarray(noise_covars), cov_u)))
         if(show_corrs):
-                factor = 1/float(b)
+                factor =0.03 + (not args.overlap_eigenvalues)*dim*0.03
                 f, axarr = plt.subplots(3, 3, figsize=(11, 5))
                 idxs = np.random.choice(range(len(covars)), size=(3, 3))
                 for i in range(idxs.shape[0]):
@@ -127,10 +129,10 @@ def _draw_subject_specific_and_estimate(cov_u, dim, vnum,
 cov_u1 = np.zeros((args.dim, args.dim))
 cov_u2 = np.identity(args.dim)
 LambdaMatrix = _draw_eigenvalues(dim=args.dim, b=args.b, distribution="unif", overlap=args.overlap_eigenvalues)
-rotMatrix = _draw_rotation_matrix(dim=3)
+rotMatrix = _draw_rotation_matrix(args.dim)
 cov_u3 = rotMatrix.dot(LambdaMatrix.dot(rotMatrix.transpose()))
 LambdaMatrix = _draw_eigenvalues(dim=args.dim, b=args.b, distribution="unif", overlap=args.overlap_eigenvalues)
-rotMatrix = _draw_rotation_matrix(dim=3)
+rotMatrix = _draw_rotation_matrix(args.dim)
 cov_u4 = rotMatrix.dot(LambdaMatrix.dot(rotMatrix.transpose()))
 
 covs_u = [cov_u1, cov_u2, cov_u3, cov_u4]
@@ -143,11 +145,11 @@ for i, cu in enumerate(covs_u):
                                                              args.b, args.show_corrs,
                                                              args.repeat_one, i)
     est_covsu.append(our)
-    print("Estimation" + str(i) + " : Euclidean distance between our estimator and ground thruth is : " + str(distance_euclid(our, cu)))
+    print("Estimation " + str(i) + " : Euclidean distance between our estimator and ground thruth is : " + str(distance_euclid(our, cu)))
     eucl_mean.append(eucl)
-    print("Estimation" + str(i) + " : Euclidean distance between euclidean mean and ground thruth is : " + str(distance_euclid(eucl, cu)))
+    print("Estimation " + str(i) + " : Euclidean distance between euclidean mean and ground thruth is : " + str(distance_euclid(eucl, cu)))
     riemann_mean.append(riemann)
-    print("Estimation" + str(i) + " : Euclidean distance between riemannian mean and ground thruth is : " + str(distance_euclid(riemann, cu)))
+    print("Estimation " + str(i) + " : Euclidean distance between riemannian mean and ground thruth is : " + str(distance_euclid(riemann, cu)))
 
 
 if (args.visual):
@@ -166,7 +168,7 @@ if (args.visual):
                                     **{'linewidth': 0.1})
         axarr[i, 0].set_axis_off()
         axarr[i, 0].set_aspect('equal', 'box')
-        if(i == 0): axarr[i, 0].set_title('Ground Truth', **{'size': 10})
+        if(i == 0): axarr[i, 0].set_title('Ground truth', **{'size': 10})
 
         im = axarr[i, 1].pcolormesh(np.flipud(est_covsu[i].T),
                                     cmap=plt.cm.gist_earth_r,
@@ -176,7 +178,7 @@ if (args.visual):
                                     **{'linewidth': 0.1})
         axarr[i, 1].set_axis_off()
         axarr[i, 1].set_aspect('equal', 'box')
-        if (i == 0): axarr[i, 1].set_title('Our Method', **{'size': 10})
+        if (i == 0): axarr[i, 1].set_title('Our method', **{'size': 10})
 
         im = axarr[i, 2].pcolormesh(np.flipud((eucl_mean[i]).T),
                                     cmap=plt.cm.gist_earth_r,
