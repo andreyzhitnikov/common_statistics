@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="common_statistic ",
+    name="common_statistics",
     version="0.0.1",
     author="Andrey, Rotem",
     author_email="andrey@campus.technion.ac.il",
