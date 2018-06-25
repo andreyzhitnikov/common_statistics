@@ -12,10 +12,10 @@ def snr(noise_cov_matrices, signal_matrix):
     """
     dim = signal_matrix.shape[0]
     varu = np.trace(signal_matrix, offset=0, axis1=0, axis2=1, dtype=None, out=None)
-    vnum = noise_cov_matrices.shape[2]
+    vnum = noise_cov_matrices.shape[0]
     identity_matr = np.eye(dim, M=None, k=0, dtype='bool')
-    identity_matr = identity_matr[:, :, np.newaxis]
-    idxs = np.tile(identity_matr, (1, 1, vnum))
+    identity_matr = identity_matr[np.newaxis, :, :]
+    idxs = np.tile(identity_matr, (vnum, 1, 1))
     varn = sum(noise_cov_matrices[idxs])/vnum
     return varu/varn
 
