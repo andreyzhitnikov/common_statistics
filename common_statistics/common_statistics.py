@@ -64,7 +64,7 @@ def _est_fixed_index(args):
     return [val, vec]
 
 
-def est_common_cov(covars, outliers):
+def est_common_cov(covars, outliers=0):
     c = _calc_const(covars)
     covars = copy.deepcopy(covars)
     d = covars[0].shape[0]
