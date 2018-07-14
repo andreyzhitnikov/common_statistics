@@ -7,7 +7,8 @@ in Heterogeneous Populations. International Conf. on Machine Learning (ICML 2018
 * to unistall
 	* cat files.txt | xargs rm -rf
 	
-** Running examples
+**Running examples
+
 * python toy_problem.py --dim 3 --vnum 3000 --visual --show-corrs --b 10
 
 
