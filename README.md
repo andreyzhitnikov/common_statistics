@@ -12,5 +12,7 @@ in Heterogeneous Populations. International Conf. on Machine Learning (ICML 2018
 
 * python toy_problem.py --dim 3 --vnum 3000 --visual --show-corrs --b 10
 
+* python common_density_demo.py
+
 
 
